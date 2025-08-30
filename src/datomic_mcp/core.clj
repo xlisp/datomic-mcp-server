@@ -542,11 +542,16 @@
                                    #(try
                                       (let [db (d/db @conn-atom)
                                             basis-t (d/basis-t db)
-                                            db-stats (d/db-stats db)]
+                                            next-t (d/next-t db)
+                                            ;; Get some basic database metrics
+                                            entity-count (d/q '[:find (count ?e) :where [?e :db/id]] db)
+                                            attr-count (d/q '[:find (count ?a) :where [_ :db/ident ?a] [?a :db/valueType]] db)]
                                         (str "Database Info:\n"
                                              "URI: " @db-uri-atom "\n"
                                              "Basis T: " basis-t "\n"
-                                             "Stats: " (pr-str db-stats)))
+                                             "Next T: " next-t "\n"
+                                             "Entity Count: " (ffirst entity-count) "\n"
+                                             "Attribute Count: " (ffirst attr-count)))
                                       (catch Exception e
                                         (str "Error getting database info: " (.getMessage e)))))]
         (continuation (text-result (if (str/blank? err) result (str "Error: " err))))))))
