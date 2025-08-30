@@ -1,19 +1,16 @@
 {:paths ["src" "resources"]
+ :mvn/repos {"my.datomic.com" {:url "https://my.datomic.com/repo"}}
  :deps {org.clojure/clojure {:mvn/version "1.11.1"}
         org.clojure/data.json {:mvn/version "2.5.1"}
         io.modelcontextprotocol.sdk/mcp {:mvn/version "0.8.0"}
         org.slf4j/slf4j-nop {:mvn/version "2.0.3"}
         nrepl/nrepl {:mvn/version "1.3.1"}
-        datascript/datascript {:mvn/version "1.7.5"}
-        datascript-transit/datascript-transit {:mvn/version "0.3.0"
-                                               :exclusions  [datascript/datascript]}
+        com.datomic/datomic-pro                         {:mvn/version "1.0.6165"}
+        com.datomic/client-pro                          {:mvn/version "0.9.57"}
         com.fasterxml.jackson.core/jackson-databind {:mvn/version "2.15.2"}}
  :aliases
- {:mcp-visual {:exec-fn datascript-mcp.visualization/viz-mcp-server}
-  :mcp-data-viz {:exec-fn datascript-mcp.data-viz-mcp/mcp-server}
-  :mcp-filesystem {:exec-fn datascript-mcp.filesystem/mcp-server}
-  :mcp
-  {:exec-fn datascript-mcp.core/mcp-server}
+ {:mcp
+  {:exec-fn datomic-mcp.core/mcp-server}
 
   :test
   {:extra-paths ["test"]
