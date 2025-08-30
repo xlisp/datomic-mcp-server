@@ -1,4 +1,10 @@
 
+# Datomic MCP Server
+
+
+- [x] Datomic in-memory database already supports
+- [ ] Connect any Datomic database url
+
 ## Run in JDK 17
 
 ```
