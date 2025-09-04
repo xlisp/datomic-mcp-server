@@ -5,12 +5,18 @@
         io.modelcontextprotocol.sdk/mcp {:mvn/version "0.8.0"}
         org.slf4j/slf4j-nop {:mvn/version "2.0.3"}
         nrepl/nrepl {:mvn/version "1.3.1"}
+        org.postgresql/postgresql                       {:mvn/version "42.2.6"}
         com.datomic/datomic-pro                         {:mvn/version "1.0.6165"}
-        com.datomic/client-pro                          {:mvn/version "0.9.57"}
+        com.datomic/client-pro                          {:mvn/version "0.9.57"} ;; {:mvn/version "1.0.82"}
+        nrepl                                           {:mvn/version "0.8.3"}
+        cider/cider-nrepl                               {:mvn/version "0.27.2"}
         com.fasterxml.jackson.core/jackson-databind {:mvn/version "2.15.2"}}
  :aliases
  {:mcp
   {:exec-fn datomic-mcp.core/mcp-server}
+
+  :repl
+  {:main-opts ["-m" "datomic-mcp.core/mcp-server"]}
 
   :test
   {:extra-paths ["test"]

@@ -2,6 +2,7 @@
   (:require [clojure.data.json :as json]
             [datomic.api :as d]
             [clojure.walk :as walk]
+            [nrepl.server :as nrepl]
             [clojure.string :as str]
             [clojure.java.io :as io])
   (:gen-class)
@@ -15,6 +16,25 @@
             McpSchema$TextContent]
            [reactor.core.publisher Mono]
            [com.fasterxml.jackson.databind ObjectMapper]))
+
+(defn nrepl-start
+  "Start a network repl for debugging on specified port followed by
+  an optional parameters map. The :bind, :transport-fn, :handler,
+  :ack-port and :greeting-fn will be forwarded to
+  clojure.tools.nrepl.server/start-server as they are."
+  [{:keys [port bind transport-fn handler ack-port greeting-fn]}]
+  (try
+    (prn "starting nREPL server on port" port)
+    (nrepl/start-server :port port
+                        :bind bind
+                        :transport-fn transport-fn
+                        :handler handler
+                        :ack-port ack-port
+                        :greeting-fn greeting-fn)
+
+    (catch Throwable t
+      (prn t "failed to start nREPL")
+      (throw t))))
 
 ;; Global connection and database URI
 (def conn-atom (atom nil))
@@ -118,7 +138,7 @@
       (try
         (when create?
           (d/create-database uri))
-        (let [conn (d/connect uri)]
+        (let [conn (d/connect url)]
           (reset! conn-atom conn)
           (reset! db-uri-atom uri)
           (continuation (text-result (str "Successfully connected to database: " uri))))
@@ -485,7 +505,7 @@
                                    #(do
                                       ;; Install schema
                                       @(d/transact @conn-atom default-schema)
-                                      
+
                                       ;; Add example data
                                       @(d/transact @conn-atom
                                         [{:person/name "Alice"
@@ -585,7 +605,8 @@
     server))
 
 (defn -main [& args]
-  (let [server (mcp-server args)]
+  (let [_ (nrepl-start {:port 8889})
+        server (mcp-server args)]
     (println "Datomic MCP Server running on STDIO transport.")
     ;; Keep the process alive
     (while true
