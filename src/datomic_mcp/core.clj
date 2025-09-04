@@ -138,7 +138,7 @@
       (try
         (when create?
           (d/create-database uri))
-        (let [conn (d/connect url)]
+        (let [conn (d/connect uri)]
           (reset! conn-atom conn)
           (reset! db-uri-atom uri)
           (continuation (text-result (str "Successfully connected to database: " uri))))
