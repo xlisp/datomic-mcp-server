@@ -74,13 +74,16 @@ Example client setup for launching the server from Claude Desktop:
 
 ```json
 {
-  "datomic-mcp": {
-    "command": "/bin/bash",
-    "args": [
-      "-c",
-      "cd /Users/clojure/Desktop/datomic-mcp-server && /usr/local/bin/clojure -M -m datomic-mcp.core"
-    ]
-  }
+    "datomic-mcp": {
+      "command": "/bin/bash",
+        "args": [
+          "-c",
+          "cd /Users/xlisp/CljPro/datomic-mcp-server && /usr/local/bin/clojure -M -m datomic-mcp.core"
+        ]
+    }
+
+...
+
 }
 ```
 
