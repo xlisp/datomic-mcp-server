@@ -97,10 +97,10 @@ Example client setup for launching the server from Claude Desktop:
 inspired by https://github.com/xlisp/datascript-mcp-server
 
 1. **Query live Datomic databases** 👉 connect to SQL / Dev-local / Cloud
-2. **Hybrid queries across Datomic + DataScript** 👉 offline + persistent data
+2. **Hybrid queries across Datomic + DataScript** 👉 offline + persistent data https://github.com/xlisp/datascript-mcp-server
 3. **Visualize Datomic relationships** 👉 [Visualization MCP Server](https://github.com/xlisp/visualization-mcp-server)
 4. **Import/export datasets** 👉 transit, edn, or AI-generated inserts
-5. **Filesystem MCP integration** 👉 browse schema & migrations
+5. **Filesystem MCP integration** 👉 browse schema & migrations https://github.com/xlisp/filesystem-mcp-server
 6. **Support Datomic history queries** 👉 temporal navigation (as-of, since, history)
 
 ---
@@ -122,6 +122,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 ## FQA
+
+### change list
 
 - [x] Datomic in-memory database already supports
 - [x] Connect any Datomic database url
