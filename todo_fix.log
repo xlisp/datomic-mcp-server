@@ -1,0 +1,33 @@
+2025-09-06T01:39:27.546Z [datomic-mcp] [info] Message from server: {"jsonrpc":"2.0","method":"notifications/tools/list_changed"} { metadata: undefined }
+2025-09-06T01:39:27.546Z [datomic-mcp] [info] Message from server: {"jsonrpc":"2.0","method":"notifications/tools/list_changed"} { metadata: undefined }
+2025-09-06T01:39:27.546Z [datomic-mcp] [info] Message from server: {"jsonrpc":"2.0","method":"notifications/tools/list_changed"} { metadata: undefined }
+2025-09-06T01:39:27.547Z [datomic-mcp] [info] Message from server: {"jsonrpc":"2.0","method":"notifications/tools/list_changed"} { metadata: undefined }
+2025-09-06T01:39:27.547Z [datomic-mcp] [info] Message from server: {"jsonrpc":"2.0","method":"notifications/tools/list_changed"} { metadata: undefined }
+2025-09-06T01:39:27.547Z [datomic-mcp] [info] Message from server: {"jsonrpc":"2.0","method":"notifications/tools/list_changed"} { metadata: undefined }
+2025-09-06T01:39:27.548Z [datomic-mcp] [info] Message from server: {"jsonrpc":"2.0","method":"notifications/tools/list_changed"} { metadata: undefined }
+2025-09-06T01:39:27.548Z [datomic-mcp] [info] Message from server: {"jsonrpc":"2.0","method":"notifications/tools/list_changed"} { metadata: undefined }
+2025-09-06T01:39:27.548Z [datomic-mcp] [info] Message from server: {"jsonrpc":"2.0","method":"notifications/tools/list_changed"} { metadata: undefined }
+2025-09-06T01:39:27.577Z [datomic-mcp] [info] Message from server: {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2024-11-05","capabilities":{"logging":{},"tools":{"listChanged":true}},"serverInfo":{"name":"datomic-server","version":"0.1.0"}}} { metadata: undefined }
+2025-09-06T01:39:27.582Z [datomic-mcp] [info] Message from client: {"method":"notifications/initialized","jsonrpc":"2.0"} { metadata: undefined }
+2025-09-06T01:39:27.582Z [datomic-mcp] [info] Message from client: {"method":"tools/list","params":{},"jsonrpc":"2.0","id":1} { metadata: undefined }
+2025-09-06T01:39:27.582Z [datomic-mcp] [info] Message from client: {"method":"prompts/list","params":{},"jsonrpc":"2.0","id":2} { metadata: undefined }
+2025-09-06T01:39:27.583Z [datomic-mcp] [info] Message from client: {"method":"resources/list","params":{},"jsonrpc":"2.0","id":3} { metadata: undefined }
+2025-09-06T01:39:27.606Z [datomic-mcp] [info] Message from server: {"jsonrpc":"2.0","id":1,"result":{"tools":[{"name":"connect_db","description":"Connect to a Datomic database","inputSchema":{"type":"object","properties":{"uri":{"type":"string","description":"Datomic database URI (e.g., datomic:mem://test, datomic:dev://localhost:4334/mydb)"},"create-if-not-exists":{"type":"boolean","description":"Create database if it doesn't exist (default: true)"}},"required":["uri"]}},{"name":"install_schema","description":"Install schema to the Datomic database","inputSchema":{"type":"object","properties":{"schema":{"type":"string","description":"Schema as EDN string or file path"},"schema-file":{"type":"string","description":"Path to schema file (EDN format)"},"use-default":{"type":"boolean","description":"Use default schema (default: false)"}},"required":[]}},{"name":"add_data","description":"Add data to the Datomic database from string or file","inputSchema":{"type":"object","properties":{"data":{"type":"string","description":"Data to add as EDN vector of entity maps or file path"},"data-file":{"type":"string","description":"Path to data file (EDN format)"}},"required":[]}},{"name":"query","description":"Execute a Datalog query against the database","inputSchema":{"type":"object","properties":{"query":{"type":"string","description":"Datalog query as EDN string"},"args":{"type":"string","description":"Optional query arguments as EDN vector"},"as-of":{"type":"string","description":"Optional as-of point (transaction ID or instant)"}},"required":["query"]}},{"name":"entity","description":"Get entity data by ID or lookup ref","inputSchema":{"type":"object","properties":{"id":{"type":"string","description":"Entity ID or lookup ref as EDN"},"as-of":{"type":"string","description":"Optional as-of point (transaction ID or instant)"}},"required":["id"]}},{"name":"find_path","description":"Find relationship paths between two entities","inputSchema":{"type":"object","properties":{"from":{"type":"string","description":"Starting entity ID or lookup ref as EDN"},"to":{"type":"string","description":"Target entity ID or lookup ref as EDN"},"max-depth":{"type":"integer","description":"Maximum path depth (default: 5)"}},"required":["from","to"]}},{"name":"history","description":"Get transaction history for an entity","inputSchema":{"type":"object","properties":{"entity-id":{"type":"string","description":"Entity ID as EDN"},"attribute":{"type":"string","description":"Optional attribute to filter history"},"limit":{"type":"integer","description":"Limit number of history entries (default: 10)"}},"required":["entity-id"]}},{"name":"load_example","description":"Load example data with people, companies and projects for testing","inputSchema":{"type":"object"}},{"name":"db_info","description":"Get database information and statistics","inputSchema":{"type":"object"}}]}} { metadata: undefined }
+2025-09-06T01:39:27.607Z [datomic-mcp] [info] Message from server: {"jsonrpc":"2.0","id":2,"error":{"code":-32601,"message":"Method not found: prompts/list"}} { metadata: undefined }
+2025-09-06T01:39:27.607Z [datomic-mcp] [info] Message from server: {"jsonrpc":"2.0","id":3,"error":{"code":-32601,"message":"Method not found: resources/list"}} { metadata: undefined }
+2025-09-06T01:39:27.614Z [datomic-mcp] [error] Unexpected token 'D', "Datomic MC"... is not valid JSON {
+  metadata: {
+    context: 'connection',
+    stack: `SyntaxError: Unexpected token 'D', "Datomic MC"... is not valid JSON\n` +
+      '    at JSON.parse (<anonymous>)\n' +
+      '    at Vwe (/Applications/Claude.app/Contents/Resources/app.asar/.vite/build/index.js:214:207)\n' +
+      '    at Bwe.readMessage (/Applications/Claude.app/Contents/Resources/app.asar/.vite/build/index.js:214:133)\n' +
+      '    at Fwe.processReadBuffer (/Applications/Claude.app/Contents/Resources/app.asar/.vite/build/index.js:215:2203)\n' +
+      '    at Socket.<anonymous> (/Applications/Claude.app/Contents/Resources/app.asar/.vite/build/index.js:215:1653)\n' +
+      '    at Socket.emit (node:events:518:28)\n' +
+      '    at addChunk (node:internal/streams/readable:561:12)\n' +
+      '    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)\n' +
+      '    at Readable.push (node:internal/streams/readable:392:5)\n' +
+      '    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23)'
+  }
+}

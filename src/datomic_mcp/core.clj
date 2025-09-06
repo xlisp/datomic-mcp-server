@@ -31,7 +31,6 @@
                         :handler handler
                         :ack-port ack-port
                         :greeting-fn greeting-fn)
-
     (catch Throwable t
       (prn t "failed to start nREPL")
       (throw t))))
@@ -124,12 +123,12 @@
 
 ;; 1. Connect to Database Tool
 (def connect-db-schema
-  (json/write-str {:type :object
-                   :properties {:uri {:type :string
+  (json/write-str {:type "object"
+                   :properties {:uri {:type "string"
                                      :description "Datomic database URI (e.g., datomic:mem://test, datomic:dev://localhost:4334/mydb)"}
-                                :create-if-not-exists {:type :boolean
+                                :create-if-not-exists {:type "boolean"
                                                       :description "Create database if it doesn't exist (default: true)"}}
-                   :required [:uri]}))
+                   :required ["uri"]}))
 
 (defn connect-db-callback [exchange arguments continuation]
   (future
@@ -157,12 +156,12 @@
 
 ;; 2. Install Schema Tool
 (def install-schema-schema
-  (json/write-str {:type :object
-                   :properties {:schema {:type :string
+  (json/write-str {:type "object"
+                   :properties {:schema {:type "string"
                                         :description "Schema as EDN string or file path"}
-                                :schema-file {:type :string
+                                :schema-file {:type "string"
                                              :description "Path to schema file (EDN format)"}
-                                :use-default {:type :boolean
+                                :use-default {:type "boolean"
                                              :description "Use default schema (default: false)"}}
                    :required []}))
 
@@ -221,10 +220,10 @@
 
 ;; 3. Add Data Tool
 (def add-data-schema
-  (json/write-str {:type :object
-                   :properties {:data {:type :string
+  (json/write-str {:type "object"
+                   :properties {:data {:type "string"
                                       :description "Data to add as EDN vector of entity maps or file path"}
-                                :data-file {:type :string
+                                :data-file {:type "string"
                                            :description "Path to data file (EDN format)"}}
                    :required []}))
 
@@ -279,14 +278,14 @@
 
 ;; 4. Query Tool
 (def query-schema
-  (json/write-str {:type :object
-                   :properties {:query {:type :string
+  (json/write-str {:type "object"
+                   :properties {:query {:type "string"
                                        :description "Datalog query as EDN string"}
-                                :args {:type :string
+                                :args {:type "string"
                                       :description "Optional query arguments as EDN vector"}
-                                :as-of {:type :string
+                                :as-of {:type "string"
                                        :description "Optional as-of point (transaction ID or instant)"}}
-                   :required [:query]}))
+                   :required ["query"]}))
 
 (defn query-callback [exchange arguments continuation]
   (future
@@ -322,12 +321,12 @@
 
 ;; 5. Entity Tool
 (def entity-schema
-  (json/write-str {:type :object
-                   :properties {:id {:type :string
+  (json/write-str {:type "object"
+                   :properties {:id {:type "string"
                                     :description "Entity ID or lookup ref as EDN"}
-                                :as-of {:type :string
+                                :as-of {:type "string"
                                        :description "Optional as-of point (transaction ID or instant)"}}
-                   :required [:id]}))
+                   :required ["id"]}))
 
 (defn entity-callback [exchange arguments continuation]
   (future
@@ -361,14 +360,14 @@
 
 ;; 6. Find Path Tool
 (def find-path-schema
-  (json/write-str {:type :object
-                   :properties {:from {:type :string
+  (json/write-str {:type "object"
+                   :properties {:from {:type "string"
                                       :description "Starting entity ID or lookup ref as EDN"}
-                                :to {:type :string
+                                :to {:type "string"
                                     :description "Target entity ID or lookup ref as EDN"}
-                                :max-depth {:type :integer
+                                :max-depth {:type "integer"
                                            :description "Maximum path depth (default: 5)"}}
-                   :required [:from :to]}))
+                   :required ["from" "to"]}))
 
 (defn find-paths-between
   "Find all paths between two entities up to max-depth"
@@ -382,19 +381,20 @@
                   (when-not (@visited current-id)
                     (swap! visited conj current-id)
                     (let [entity (d/entity db current-id)]
-                      (doseq [[attr value] entity]
-                        (when (and (keyword? attr)
-                                (not= attr :db/id))
-                          (cond
-                            ;; Reference attribute - single value
-                            (and (number? value) (d/entity db value))
-                            (dfs value (conj path current-id attr) (inc depth))
+                      (when entity
+                        (doseq [[attr value] entity]
+                          (when (and (keyword? attr)
+                                  (not= attr :db/id))
+                            (cond
+                              ;; Reference attribute - single value
+                              (and (number? value) (d/entity db value))
+                              (dfs value (conj path current-id attr) (inc depth))
 
-                            ;; Reference attribute - collection
-                            (and (coll? value) (every? number? value))
-                            (doseq [ref-id value]
-                              (when (d/entity db ref-id)
-                                (dfs ref-id (conj path current-id attr) (inc depth))))))))
+                              ;; Reference attribute - collection
+                              (and (coll? value) (every? number? value))
+                              (doseq [ref-id value]
+                                (when (d/entity db ref-id)
+                                  (dfs ref-id (conj path current-id attr) (inc depth)))))))))
                     (swap! visited disj current-id)))))]
       (dfs from-id [] 0)
       @paths)))
@@ -417,8 +417,9 @@
                                             to-id (if (number? to-ref)
                                                     to-ref
                                                     (:db/id (d/entity db to-ref)))
-                                            paths (find-paths-between db from-id to-id max-depth)]
-                                        (if (empty? paths)
+                                            paths (when (and from-id to-id)
+                                                    (find-paths-between db from-id to-id max-depth))]
+                                        (if (or (nil? paths) (empty? paths))
                                           "No paths found between the entities"
                                           (str "Found " (count paths) " path(s):\n"
                                             (str/join "\n" (map-indexed
@@ -441,14 +442,14 @@
 
 ;; 7. History Tool
 (def history-schema
-  (json/write-str {:type :object
-                   :properties {:entity-id {:type :string
+  (json/write-str {:type "object"
+                   :properties {:entity-id {:type "string"
                                            :description "Entity ID as EDN"}
-                                :attribute {:type :string
+                                :attribute {:type "string"
                                           :description "Optional attribute to filter history"}
-                                :limit {:type :integer
+                                :limit {:type "integer"
                                        :description "Limit number of history entries (default: 10)"}}
-                   :required [:entity-id]}))
+                   :required ["entity-id"]}))
 
 (defn history-callback [exchange arguments continuation]
   (future
@@ -495,49 +496,52 @@
 
 ;; 8. Load Example Tool
 (def load-example-schema
-  (json/write-str {:type :object}))
+  (json/write-str {:type "object"}))
 
 (defn load-example-callback [exchange arguments continuation]
   (future
     (if-not @conn-atom
       (continuation (text-result "Not connected to database. Please run connect_db first."))
       (let [{:keys [result err]} (capture-output
-                                   #(do
-                                      ;; Install schema
-                                      @(d/transact @conn-atom default-schema)
+                                   #(try
+                                      (do
+                                        ;; Install schema
+                                        @(d/transact @conn-atom default-schema)
 
-                                      ;; Add example data
-                                      @(d/transact @conn-atom
-                                        [{:person/name "Alice"
-                                          :person/age 30
-                                          :person/email "alice@example.com"}
-                                         {:person/name "Bob"
-                                          :person/age 25
-                                          :person/email "bob@example.com"}
-                                         {:person/name "Charlie"
-                                          :person/age 35
-                                          :person/email "charlie@example.com"}
-                                         {:company/name "Tech Corp"}
-                                         {:project/name "Project A"}
-                                         {:project/name "Project B"}])
+                                        ;; Add example data
+                                        @(d/transact @conn-atom
+                                          [{:person/name "Alice"
+                                            :person/age 30
+                                            :person/email "alice@example.com"}
+                                           {:person/name "Bob"
+                                            :person/age 25
+                                            :person/email "bob@example.com"}
+                                           {:person/name "Charlie"
+                                            :person/age 35
+                                            :person/email "charlie@example.com"}
+                                           {:company/name "Tech Corp"}
+                                           {:project/name "Project A"}
+                                           {:project/name "Project B"}])
 
-                                      ;; Add relationships
-                                      @(d/transact @conn-atom
-                                        [{:person/name "Alice"
-                                          :person/friends [[:person/name "Bob"]]
-                                          :person/works-for [:company/name "Tech Corp"]
-                                          :person/works-on [[:project/name "Project A"]]}
-                                         {:person/name "Bob"
-                                          :person/friends [[:person/name "Alice"] [:person/name "Charlie"]]
-                                          :person/works-for [:company/name "Tech Corp"]
-                                          :person/works-on [[:project/name "Project B"]]}
-                                         {:person/name "Charlie"
-                                          :person/parent [:person/name "Alice"]
-                                          :person/works-for [:company/name "Tech Corp"]}
-                                         {:project/name "Project B"
-                                          :project/depends-on [[:project/name "Project A"]]}])
+                                        ;; Add relationships
+                                        @(d/transact @conn-atom
+                                          [{:person/name "Alice"
+                                            :person/friends [[:person/name "Bob"]]
+                                            :person/works-for [:company/name "Tech Corp"]
+                                            :person/works-on [[:project/name "Project A"]]}
+                                           {:person/name "Bob"
+                                            :person/friends [[:person/name "Alice"] [:person/name "Charlie"]]
+                                            :person/works-for [:company/name "Tech Corp"]
+                                            :person/works-on [[:project/name "Project B"]]}
+                                           {:person/name "Charlie"
+                                            :person/parent [:person/name "Alice"]
+                                            :person/works-for [:company/name "Tech Corp"]}
+                                           {:project/name "Project B"
+                                            :project/depends-on [[:project/name "Project A"]]}])
 
-                                      "Example database loaded with people, company, and projects"))]
+                                        "Example database loaded with people, company, and projects")
+                                      (catch Exception e
+                                        (str "Error loading example data: " (.getMessage e)))))]
         (continuation (text-result (if (str/blank? err) result (str "Error: " err))))))))
 
 (def load-example-tool
@@ -552,7 +556,7 @@
 
 ;; 9. Database Info Tool
 (def db-info-schema
-  (json/write-str {:type :object}))
+  (json/write-str {:type "object"}))
 
 (defn db-info-callback [exchange arguments continuation]
   (future
@@ -586,11 +590,14 @@
             (accept [this sink]
               (db-info-callback exchange arguments #(.success sink %)))))))))
 
-;; Server setup
+;; Server setup - 修复了 serverInfo 参数问题
 (defn mcp-server [& args]
-  (let [transport-provider (StdioServerTransportProvider. (ObjectMapper.))
+  (let [object-mapper (doto (ObjectMapper.)
+                       (.configure com.fasterxml.jackson.databind.SerializationFeature/FAIL_ON_EMPTY_BEANS false)
+                       (.setSerializationInclusion com.fasterxml.jackson.annotation.JsonInclude$Include/NON_NULL))
+        transport-provider (StdioServerTransportProvider. object-mapper)
         server (-> (McpServer/async transport-provider)
-                 (.serverInfo "datomic-server" "0.1.0")
+                 (.serverInfo "datomic-server" "0.1.0")  ;; 修复：移除了 json/write-str
                  (.capabilities (-> (McpSchema$ServerCapabilities/builder)
                                   (.tools true)
                                   (.build)))
@@ -605,9 +612,10 @@
     server))
 
 (defn -main [& args]
-  (let [_ (nrepl-start {:port 8889})
+  (let [;;_ (nrepl-start {:port 9889}) ;; for dev
         server (mcp-server args)]
     (println "Datomic MCP Server running on STDIO transport.")
     ;; Keep the process alive
     (while true
       (Thread/sleep 1000))))
+
