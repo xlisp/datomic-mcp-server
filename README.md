@@ -94,6 +94,8 @@ Example client setup for launching the server from Claude Desktop:
 
 ## 🔮 Roadmap
 
+inspired by https://github.com/xlisp/datascript-mcp-server
+
 1. **Query live Datomic databases** 👉 connect to SQL / Dev-local / Cloud
 2. **Hybrid queries across Datomic + DataScript** 👉 offline + persistent data
 3. **Visualize Datomic relationships** 👉 [Visualization MCP Server](https://github.com/xlisp/visualization-mcp-server)
