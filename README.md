@@ -139,8 +139,7 @@ export CPPFLAGS="-I/Library/Java/JavaVirtualMachines/microsoft-17.jdk/Contents/H
 
 ### Run datomic transactor
 
-* datomic-pro-1.0.6165 transactor must run on java 1.8 ( brew install openjdk@8 )
-
+* datomic-pro-1.0.6165 transactor must run on java 1.8 ( brew install openjdk@8 ), other jdk will errors `Execution error (ActiveMQInternalErrorException) at org.apache.activemq.artemis.core.protocol.core.impl.ChannelImpl/sendBlocking (ChannelImpl.java:404).`
 ```
 ➜  datomic-pro-1.0.6165 ./rundatomic.sh
 Launching with Java options -server -Xms4g -Xmx4g -XX:+UseG1GC -XX:MaxGCPauseMillis=50
